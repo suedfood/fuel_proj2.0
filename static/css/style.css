@@ -11,78 +11,65 @@
 
 body {
     font-family: 'NeueHaas', -apple-system, sans-serif;
-    background-color: #FFFFFF;
-    color: #1A1A1A;
+    color: #31333F;
+    background: #FFF;
     margin: 0;
-    padding: 40px 20px;
+    padding: 60px 20px;
     display: flex;
     justify-content: center;
-    -webkit-font-smoothing: antialiased;
 }
 
-.container { width: 100%; max-width: 560px; }
+.container { width: 100%; max-width: 700px; }
 
-/* Typography - Exact Parity */
-h1 { font-size: 2.8rem; letter-spacing: -1.2px; font-weight: 500; margin-bottom: 8px; text-align: left; }
-.date { font-size: 1.4rem; color: #444; font-weight: 500; margin: 0; text-align: left; letter-spacing: -0.5px; }
-.subtitle { font-size: 1.15rem; color: #555; font-weight: 400; margin-top: 5px; margin-bottom: 30px; text-align: left; }
+/* Streamlit Header Parity */
+.main-title { font-size: 2.25rem; font-weight: 700; margin-bottom: 8px; color: #1A1A1A; }
+.date-header { font-size: 1.5rem; font-weight: 700; margin: 0; color: #1A1A1A; }
+.subtitle { font-size: 0.875rem; color: #555; margin-bottom: 40px; }
 
-.section-label { display: block; font-size: 1rem; font-weight: 400; color: #1A1A1A; margin-bottom: 12px; text-align: left; }
+.input-block { margin-bottom: 25px; text-align: left; transition: opacity 0.3s; }
+.hidden { display: none; opacity: 0; }
 
-.hidden { display: none; }
+.stLabel { font-size: 0.875rem; font-weight: 500; margin-bottom: 8px; display: block; }
 
-/* Custom Radio Styling to match Streamlit */
-.radio-group { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 2rem; }
-.radio-option input { display: none; }
-.radio-option label { 
-    padding: 8px 16px; border: 1px solid #E0E0E0; border-radius: 8px; 
-    cursor: pointer; font-weight: 400; font-size: 0.95rem; transition: 0.2s; 
+/* Radio Buttons matching Screenshot */
+.stRadioGroup { display: flex; gap: 15px; }
+.radio-container { font-size: 0.875rem; display: flex; align-items: center; cursor: pointer; font-weight: 400; }
+.radio-container input { display: none; }
+.radio-dot { height: 16px; width: 16px; border: 1px solid #CCC; border-radius: 50%; margin-right: 8px; display: inline-block; position: relative; }
+.radio-container input:checked + .radio-dot { border-color: #FF4B4B; background: #FF4B4B; }
+.radio-container input:checked + .radio-dot::after { content: ""; width: 6px; height: 6px; background: white; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+
+/* Selectboxes matching Screenshot */
+.stSelect {
+    width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #E0E0E0;
+    background: #F0F2F6; font-family: inherit; font-size: 0.875rem; cursor: pointer;
 }
-.radio-option input:checked + label { border-color: #FF4B4B; color: #FF4B4B; background: #FFF5F5; }
 
-/* Select & Inputs */
-.stSelect { 
-    width: 100%; padding: 12px; border: 1px solid #E0E0E0; border-radius: 8px; 
-    font-family: inherit; font-size: 1rem; margin-bottom: 24px; appearance: none;
-    background: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 10px center;
+/* Image */
+.image-wrapper { margin-top: 20px; }
+#carImage { width: 160px; height: auto; display: block; }
+
+/* Sliders matching Screenshot */
+.stSlider { width: 100%; accent-color: #FF4B4B; margin-top: 10px; }
+.slider-val { color: #FF4B4B; font-weight: 700; font-size: 0.8rem; text-align: center; display: block; width: 100%; }
+
+/* Report Section */
+.stDivider { height: 1px; background: #E0E0E0; margin: 40px 0; }
+.report-title { font-size: 1.75rem; font-weight: 700; margin-bottom: 20px; }
+.metrics-container { display: flex; gap: 60px; margin-bottom: 30px; }
+.metric-card small { font-size: 0.8rem; font-weight: 500; display: block; }
+.metric-card p { font-size: 2.5rem; font-weight: 700; margin: 0; letter-spacing: -1px; }
+
+/* The Red Warning Bar */
+.stErrorBox {
+    background-color: #ffe2e2; color: #dc2626; padding: 12px 20px;
+    border-radius: 4px; border: 1px solid #fca5a5; font-weight: 700; font-size: 0.95rem;
 }
 
-/* Image Styling */
-.image-wrapper { text-align: left; margin-bottom: 30px; }
-#carImage { width: 240px; height: 240px; object-fit: cover; border-radius: 12px; }
+.stCaption { font-size: 0.75rem; color: #888; margin-top: 40px; }
+.stFooter { border-top: 1px solid #EEE; margin-top: 20px; padding-top: 10px; color: #AAA; font-size: 0.7rem; }
 
-/* Sliders */
-.stSlider { width: 100%; margin-bottom: 30px; accent-color: #FF4B4B; }
-.val-badge { font-weight: 500; color: #FF4B4B; margin-left: 8px; }
-
-/* Buttons */
-.btn-continue { 
-    width: 100%; padding: 14px; background: #1A1A1A; color: white; border: none; 
-    border-radius: 8px; font-weight: 500; font-size: 1rem; cursor: pointer; transition: opacity 0.2s;
-}
-.btn-continue:active { opacity: 0.8; }
-
-/* The Report - Metrics */
-.divider { height: 1px; background: #EEE; margin: 40px 0; }
-.report-header { font-size: 1.5rem; font-weight: 500; letter-spacing: -0.5px; text-align: left; margin-bottom: 24px; }
-.metrics { display: flex; gap: 40px; margin-bottom: 32px; }
-.metric small { display: block; font-size: 15px; color: #555; font-weight: 400; margin-bottom: 4px; }
-.metric p { font-size: 42px; font-weight: 500; letter-spacing: -0.8px; margin: 0; }
-
-/* Error Box Styling */
-.stError { 
-    background-color: #FF4B4B; color: white; padding: 16px 20px; 
-    border-radius: 8px; text-align: left; margin-bottom: 30px;
-}
-.stError p { margin: 0; font-size: 1.15rem; line-height: 1.5; font-weight: 500; }
-
-.stCaption { color: #888; font-size: 0.85rem; font-weight: 400; text-align: left; margin-top: 40px; }
-.custom-footer { border-top: 1px solid #EEE; margin-top: 30px; padding-top: 16px; color: #AAA; font-size: 0.85rem; font-weight: 400; text-align: left; }
-
-/* Mobile Optimization */
 @media (max-width: 640px) {
-    h1 { font-size: 2rem; }
-    #carImage { width: 180px; height: 180px; }
-    .metrics { flex-direction: column; gap: 24px; }
-    .metric p { font-size: 32px; }
+    .metrics-container { flex-direction: column; gap: 20px; }
+    .main-title { font-size: 1.75rem; }
 }
