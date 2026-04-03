@@ -4,11 +4,95 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Fuel Surplus Calc</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* 1. TYPOGRAPHY & FONTS */
+        @font-face {
+            font-family: 'NeueHaas';
+            src: url('https://cdn.jsdelivr.net/gh/suedfood/fuel-calc@main/NeueHaasDisplayRoman.ttf') format('truetype');
+            font-weight: 400;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'NeueHaas';
+            src: url('https://cdn.jsdelivr.net/gh/suedfood/fuel-calc@main/NeueHaasDisplayMediu.ttf') format('truetype');
+            font-weight: 500;
+            font-display: swap;
+        }
+
+        body {
+            font-family: 'NeueHaas', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #31333F;
+            background: #FFFFFF;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container { width: 100%; max-width: 700px; }
+
+        /* Titles matching Streamlit exactly */
+        h1 { font-size: 2.25rem; font-weight: 700; margin-bottom: 8px; color: #1A1A1A; letter-spacing: -0.02em; }
+        .date-header { font-size: 1.5rem; font-weight: 700; margin: 0; color: #1A1A1A; }
+        .subtitle { font-size: 0.875rem; color: #555; margin-bottom: 40px; font-weight: 400; }
+
+        .input-block { margin-bottom: 25px; text-align: left; transition: all 0.3s ease-in-out; }
+        .hidden { display: none !important; opacity: 0; pointer-events: none; }
+
+        .stLabel { font-size: 0.875rem; font-weight: 500; margin-bottom: 8px; display: block; color: #31333F; }
+
+        /* Radio Buttons - Circular Dot Style */
+        .stRadioGroup { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 10px; }
+        .radio-container { font-size: 0.875rem; display: flex; align-items: center; cursor: pointer; font-weight: 400; color: #31333F; }
+        .radio-container input { display: none; }
+        .radio-dot { height: 16px; width: 16px; border: 1px solid #CCC; border-radius: 50%; margin-right: 8px; display: inline-block; position: relative; background: #FFF; }
+        .radio-container input:checked + .radio-dot { border-color: #FF4B4B; background: #FF4B4B; }
+        .radio-container input:checked + .radio-dot::after { content: ""; width: 6px; height: 6px; background: white; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+
+        /* Selectboxes - The Streamlit Grey Look */
+        .stSelect {
+            width: 100%; padding: 10px 12px; border-radius: 4px; border: 1px solid rgba(49, 51, 63, 0.2);
+            background-color: #F0F2F6; font-family: inherit; font-size: 0.875rem; cursor: pointer; color: #31333F;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 10px center; background-size: 14px;
+        }
+
+        /* Image Display */
+        .image-wrapper { margin: 20px 0; }
+        #carImage { width: 180px; height: auto; display: block; border-radius: 4px; }
+
+        /* Sliders - Red Streamlit Style */
+        .stSlider { width: 100%; accent-color: #FF4B4B; margin: 10px 0; cursor: pointer; }
+        .slider-val { color: #FF4B4B; font-weight: 700; font-size: 0.8rem; text-align: center; display: block; width: 100%; margin-top: -5px; }
+
+        /* Report Section */
+        .stDivider { height: 1px; background: rgba(49, 51, 63, 0.1); margin: 40px 0; }
+        .report-title { font-size: 1.75rem; font-weight: 700; margin-bottom: 25px; color: #1A1A1A; }
+        .metrics-container { display: flex; gap: 80px; margin-bottom: 35px; }
+        .metric-card small { font-size: 0.8rem; font-weight: 400; color: #555; display: block; margin-bottom: 4px; }
+        .metric-card p { font-size: 2.5rem; font-weight: 700; margin: 0; color: #1A1A1A; letter-spacing: -0.03em; }
+
+        /* The Red Error Bar (Pinkish Red) */
+        .stErrorBox {
+            background-color: #FFE2E2; color: #DC2626; padding: 14px 20px;
+            border-radius: 4px; border: 1px solid #FCA5A5; font-weight: 500; font-size: 0.95rem; line-height: 1.4;
+        }
+
+        .stCaption { font-size: 0.75rem; color: #888; margin-top: 50px; font-weight: 400; }
+        .stFooter { border-top: 1px solid #EEE; margin-top: 20px; padding-top: 15px; color: #AAA; font-size: 0.75rem; font-weight: 400; }
+
+        @media (max-width: 640px) {
+            .metrics-container { flex-direction: column; gap: 25px; }
+            h1 { font-size: 1.75rem; }
+            .metric-card p { font-size: 2rem; }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="main-title">⛽️ Pakistan Fuel Hike Impact</h1>
+        <h1>⛽️ Pakistan Fuel Hike Impact</h1>
         <h2 class="date-header">April 03, 2026</h2>
         <p class="subtitle">Find out how much more you’ll spend on fuel each month</p>
 
@@ -29,7 +113,7 @@
             <label class="stLabel">Which vehicle do you drive?</label>
             <select id="modelSelect" class="stSelect" onchange="updateModel()"></select>
             <div class="image-wrapper">
-                <img id="carImage" src="" alt="Vehicle">
+                <img id="carImage" src="" alt="Vehicle" onerror="this.style.display='none'">
             </div>
         </div>
 
@@ -80,7 +164,10 @@
 
         function revealNext(n) {
             const block = document.getElementById('block' + n);
-            if (block) block.classList.remove('hidden');
+            if (block) {
+                block.classList.remove('hidden');
+                block.style.opacity = "1";
+            }
         }
 
         function selectCategory(cat) {
@@ -89,7 +176,7 @@
             Object.keys(categories[cat]).forEach(model => {
                 let opt = document.createElement('option');
                 opt.value = model;
-                opt.innerHTML = model;
+                opt.innerText = model;
                 select.appendChild(opt);
             });
             window.currentCat = cat;
@@ -98,12 +185,15 @@
 
         function updateModel() {
             const model = document.getElementById('modelSelect').value;
+            const img = document.getElementById('carImage');
+            img.style.display = 'block';
+            
             let filename = model.replace(/ /g, "%20") + ".png";
             if(model === "CD 70") filename = "CD70.png";
             if(model === "Changan Alsvin") filename = "Alswin.png";
             if(model === "Toyota Hilux/Revo") filename = "Revo.png";
             
-            document.getElementById('carImage').src = cdn + filename;
+            img.src = cdn + filename;
             revealNext(3);
         }
 
@@ -125,8 +215,11 @@
 
             document.getElementById('perTank').innerText = "Rs. " + Math.round(perTank).toLocaleString();
             document.getElementById('monthlyTotal').innerText = "Rs. " + Math.round(total).toLocaleString();
-            document.getElementById('errorVal').innerText = "Rs. " + Math.round(total).toLocaleString();
-            document.getElementById('report').classList.remove('hidden');
+            document.getElementById('errorVal').innerText = "Rs. " + Math.round(total).toLocaleString() + " per month";
+            
+            const report = document.getElementById('report');
+            report.classList.remove('hidden');
+            report.style.opacity = "1";
         }
     </script>
 </body>
