@@ -9,66 +9,71 @@
 <body>
     <div class="container">
         <h1>⛽️ Pakistan Fuel Hike Impact</h1>
-        <p class="date">{{ date }}</p>
+        <p class="date">### {{ date }}</p>
         <p class="subtitle">Find out how much more you’ll spend on fuel each month</p>
 
-        <div id="step1" class="step">
-            <label>Select vehicle category</label>
-            <div class="radio-group">
-                {% for cat in categories %}
-                <button type="button" class="btn-radio" onclick="selectCategory('{{ cat }}')">{{ cat }}</button>
-                {% endfor %}
-            </div>
-        </div>
-
-        <div id="step2" class="step hidden">
-            <label>Which vehicle do you drive?</label>
-            <select id="modelSelect" onchange="updateImage()"></select>
-            <div class="image-container">
-                <img id="carImage" src="" alt="Vehicle">
-            </div>
-            <button class="btn-continue" onclick="nextStep(3)">Continue</button>
-        </div>
-
-        <div id="step3" class="step hidden">
-            <label>Fuel type</label>
-            <select id="fuelType">
-                <option value="Petrol">Petrol</option>
-                <option value="Diesel">Diesel</option>
-            </select>
-            <button class="btn-continue" onclick="nextStep(4)">Continue</button>
-        </div>
-
-        <div id="step4" class="step hidden">
-            <label>How many times do you refuel each month? <span id="fillVal">2</span></label>
-            <input type="range" min="1" max="10" value="2" oninput="document.getElementById('fillVal').innerText=this.value" id="fills">
-            <button class="btn-continue" onclick="nextStep(5)">Continue</button>
-        </div>
-
-        <div id="step5" class="step hidden">
-            <label>On a scale of 1 to 10, how full is your tank? <span id="scaleVal">2</span></label>
-            <input type="range" min="1" max="10" value="2" oninput="document.getElementById('scaleVal').innerText=this.value" id="tankScale">
-            <button class="btn-continue" onclick="calculate()">Show Final Report</button>
-        </div>
-
-        <div id="report" class="step hidden">
-            <hr>
-            <h3>Fuel Impact Report</h3>
-            <div class="metrics">
-                <div class="metric">
-                    <small>Additional cost per tank</small>
-                    <p id="perTank">Rs. 0</p>
-                </div>
-                <div class="metric">
-                    <small>Total additional monthly cost</small>
-                    <p id="monthlyTotal">Rs. 0</p>
+        <div id="app-content">
+            <div id="step1" class="step">
+                <label class="section-label">Select vehicle category</label>
+                <div class="radio-group">
+                    {% for cat in categories %}
+                    <div class="radio-option">
+                        <input type="radio" name="category" id="{{ cat }}" value="{{ cat }}" onclick="selectCategory('{{ cat }}')">
+                        <label for="{{ cat }}">{{ cat }}</label>
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
-            <div class="error-msg">
-                To continue business as usual, you'll have to pay an additional <span id="errorVal"></span> per month
+
+            <div id="step2" class="step hidden">
+                <label class="section-label">Which vehicle do you drive?</label>
+                <select id="modelSelect" class="stSelect" onchange="updateImage()"></select>
+                <div class="image-wrapper">
+                    <img id="carImage" src="" alt="Vehicle">
+                </div>
+                <button class="btn-continue" onclick="nextStep(3)">Continue</button>
             </div>
-            <p class="caption">Data reflects the April 3rd official price re-basing compared to March 2026.</p>
-            <footer class="custom-footer">Created by Syed Fahad Rizwan</footer>
+
+            <div id="step3" class="step hidden">
+                <label class="section-label">Fuel type</label>
+                <select id="fuelType" class="stSelect">
+                    <option value="Petrol">Petrol</option>
+                    <option value="Diesel">Diesel</option>
+                </select>
+                <button class="btn-continue" onclick="nextStep(4)">Continue</button>
+            </div>
+
+            <div id="step4" class="step hidden">
+                <label class="section-label">How many times do you refuel each month? <span class="val-badge" id="fillVal">2</span></label>
+                <input type="range" min="1" max="10" value="2" class="stSlider" oninput="document.getElementById('fillVal').innerText=this.value" id="fills">
+                <button class="btn-continue" onclick="nextStep(5)">Continue</button>
+            </div>
+
+            <div id="step5" class="step hidden">
+                <label class="section-label">On a scale of 1 to 10, how full is your tank? <span class="val-badge" id="scaleVal">2</span></label>
+                <input type="range" min="1" max="10" value="2" class="stSlider" oninput="document.getElementById('scaleVal').innerText=this.value" id="tankScale">
+                <button class="btn-continue" onclick="calculate()">Show Final Report</button>
+            </div>
+
+            <div id="report" class="step hidden">
+                <div class="divider"></div>
+                <h3 class="report-header">Fuel Impact Report</h3>
+                <div class="metrics">
+                    <div class="metric">
+                        <small>Additional cost per tank</small>
+                        <p id="perTank">Rs. 0</p>
+                    </div>
+                    <div class="metric">
+                        <small>Total additional monthly cost</small>
+                        <p id="monthlyTotal">Rs. 0</p>
+                    </div>
+                </div>
+                <div class="stError">
+                    <p>To continue business as usual, you'll have to pay an additional <span id="errorVal"></span> per month</p>
+                </div>
+                <p class="stCaption">Data reflects the April 3rd official price re-basing compared to March 2026.</p>
+                <footer class="custom-footer">Created by Syed Fahad Rizwan</footer>
+            </div>
         </div>
     </div>
 
@@ -81,7 +86,7 @@
         function nextStep(n) {
             document.querySelectorAll('.step').forEach(s => s.classList.add('hidden'));
             document.getElementById('step' + n).classList.remove('hidden');
-            window.scrollTo(0,0);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function selectCategory(cat) {
@@ -101,6 +106,7 @@
         function updateImage() {
             const model = document.getElementById('modelSelect').value;
             let filename = model.replace(/ /g, "%20") + ".png";
+            // Overrides for specific filenames in your repo
             if(model === "CD 70") filename = "CD70.png";
             if(model === "Changan Alsvin") filename = "Alswin.png";
             if(model === "Toyota Hilux/Revo") filename = "Revo.png";
@@ -125,8 +131,7 @@
             document.getElementById('monthlyTotal').innerText = "Rs. " + Math.round(total).toLocaleString();
             document.getElementById('errorVal').innerText = "Rs. " + Math.round(total).toLocaleString();
             
-            document.querySelectorAll('.step').forEach(s => s.classList.add('hidden'));
-            document.getElementById('report').classList.remove('hidden');
+            nextStep('report');
         }
     </script>
 </body>
