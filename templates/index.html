@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fuel Surplus Calc</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>⛽️ Pakistan Fuel Hike Impact</h1>
+        <p class="date">{{ date }}</p>
+        <p class="subtitle">Find out how much more you’ll spend on fuel each month</p>
+
+        <div id="step1" class="step">
+            <label>Select vehicle category</label>
+            <div class="radio-group">
+                {% for cat in categories %}
+                <button type="button" class="btn-radio" onclick="selectCategory('{{ cat }}')">{{ cat }}</button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div id="step2" class="step hidden">
+            <label>Which vehicle do you drive?</label>
+            <select id="modelSelect" onchange="updateImage()"></select>
+            <div class="image-container">
+                <img id="carImage" src="" alt="Vehicle">
+            </div>
+            <button class="btn-continue" onclick="nextStep(3)">Continue</button>
+        </div>
+
+        <div id="step3" class="step hidden">
+            <label>Fuel type</label>
+            <select id="fuelType">
+                <option value="Petrol">Petrol</option>
+                <option value="Diesel">Diesel</option>
+            </select>
+            <button class="btn-continue" onclick="nextStep(4)">Continue</button>
+        </div>
+
+        <div id="step4" class="step hidden">
+            <label>How many times do you refuel each month? <span id="fillVal">2</span></label>
+            <input type="range" min="1" max="10" value="2" oninput="document.getElementById('fillVal').innerText=this.value" id="fills">
+            <button class="btn-continue" onclick="nextStep(5)">Continue</button>
+        </div>
+
+        <div id="step5" class="step hidden">
+            <label>On a scale of 1 to 10, how full is your tank? <span id="scaleVal">2</span></label>
+            <input type="range" min="1" max="10" value="2" oninput="document.getElementById('scaleVal').innerText=this.value" id="tankScale">
+            <button class="btn-continue" onclick="calculate()">Show Final Report</button>
+        </div>
+
+        <div id="report" class="step hidden">
+            <hr>
+            <h3>Fuel Impact Report</h3>
+            <div class="metrics">
+                <div class="metric">
+                    <small>Additional cost per tank</small>
+                    <p id="perTank">Rs. 0</p>
+                </div>
+                <div class="metric">
+                    <small>Total additional monthly cost</small>
+                    <p id="monthlyTotal">Rs. 0</p>
+                </div>
+            </div>
+            <div class="error-msg">
+                To continue business as usual, you'll have to pay an additional <span id="errorVal"></span> per month
+            </div>
+            <p class="caption">Data reflects the April 3rd official price re-basing compared to March 2026.</p>
+            <footer class="custom-footer">Created by Syed Fahad Rizwan</footer>
+        </div>
+    </div>
+
+    <script>
+        const categories = {{ categories|tojson }};
+        const fuelImpacts = {"Petrol": 137.24, "Diesel": 184.49};
+        const cdn = "https://cdn.jsdelivr.net/gh/suedfood/fuel-calc@main/";
+        let selectedCat = "";
+
+        function nextStep(n) {
+            document.querySelectorAll('.step').forEach(s => s.classList.add('hidden'));
+            document.getElementById('step' + n).classList.remove('hidden');
+            window.scrollTo(0,0);
+        }
+
+        function selectCategory(cat) {
+            selectedCat = cat;
+            const select = document.getElementById('modelSelect');
+            select.innerHTML = "";
+            Object.keys(categories[cat]).forEach(model => {
+                let opt = document.createElement('option');
+                opt.value = model;
+                opt.innerHTML = model;
+                select.appendChild(opt);
+            });
+            updateImage();
+            nextStep(2);
+        }
+
+        function updateImage() {
+            const model = document.getElementById('modelSelect').value;
+            let filename = model.replace(/ /g, "%20") + ".png";
+            if(model === "CD 70") filename = "CD70.png";
+            if(model === "Changan Alsvin") filename = "Alswin.png";
+            if(model === "Toyota Hilux/Revo") filename = "Revo.png";
+            
+            document.getElementById('carImage').src = cdn + filename;
+        }
+
+        function calculate() {
+            const model = document.getElementById('modelSelect').value;
+            const fuel = document.getElementById('fuelType').value;
+            const fills = document.getElementById('fills').value;
+            const scale = document.getElementById('tankScale').value;
+            
+            const tankSize = categories[selectedCat][model];
+            const refillFactor = 1 - (scale / 10);
+            const hike = fuelImpacts[fuel];
+            
+            const perTank = (tankSize * refillFactor) * hike;
+            const total = perTank * fills;
+
+            document.getElementById('perTank').innerText = "Rs. " + Math.round(perTank).toLocaleString();
+            document.getElementById('monthlyTotal').innerText = "Rs. " + Math.round(total).toLocaleString();
+            document.getElementById('errorVal').innerText = "Rs. " + Math.round(total).toLocaleString();
+            
+            document.querySelectorAll('.step').forEach(s => s.classList.add('hidden'));
+            document.getElementById('report').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
