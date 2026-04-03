@@ -1,0 +1,53 @@
+@font-face {
+    font-family: 'NeueHaas';
+    src: url('https://cdn.jsdelivr.net/gh/suedfood/fuel-calc@main/NeueHaasDisplayRoman.ttf') format('truetype');
+    font-weight: 400;
+}
+@font-face {
+    font-family: 'NeueHaas';
+    src: url('https://cdn.jsdelivr.net/gh/suedfood/fuel-calc@main/NeueHaasDisplayMediu.ttf') format('truetype');
+    font-weight: 500;
+}
+
+body {
+    font-family: 'NeueHaas', -apple-system, sans-serif;
+    background-color: #FFF;
+    color: #1A1A1A;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.container { width: 100%; max-width: 500px; text-align: center; }
+
+h1 { font-size: 2.8rem; letter-spacing: -1.2px; margin-bottom: 0.5rem; font-weight: 500; }
+.date { font-size: 1.2rem; color: #444; margin: 0; font-weight: 500; }
+.subtitle { font-size: 1.1rem; color: #666; font-weight: 400; margin-top: 5px; margin-bottom: 2rem; }
+
+label { display: block; font-size: 1rem; font-weight: 400; margin-bottom: 1rem; }
+
+.hidden { display: none; }
+.radio-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.btn-radio { padding: 10px 15px; border: 1px solid #EEE; background: #F9F9F9; border-radius: 8px; cursor: pointer; font-family: inherit; font-weight: 400; }
+
+select, input[type="range"] { width: 100%; margin-bottom: 2rem; padding: 10px; border-radius: 8px; border: 1px solid #EEE; font-family: inherit; }
+
+.image-container img { width: 240px; height: 240px; object-fit: cover; border-radius: 12px; margin: 20px 0; }
+
+.btn-continue { width: 100%; padding: 15px; background: #1A1A1A; color: white; border: none; border-radius: 10px; font-weight: 500; font-size: 1rem; cursor: pointer; }
+
+/* Metrics */
+.metrics { display: flex; justify-content: space-between; margin: 2rem 0; }
+.metric p { font-size: 2.2rem; font-weight: 500; margin: 5px 0; letter-spacing: -0.8px; }
+.metric small { color: #555; font-weight: 400; }
+
+.error-msg { background: #FFF5F5; color: #E03131; padding: 20px; border-radius: 12px; font-weight: 500; border: 1px solid #FFC9C9; }
+.caption { color: #888; font-size: 0.8rem; margin-top: 2rem; font-weight: 400; }
+.custom-footer { border-top: 1px solid #EEE; margin-top: 3rem; padding-top: 1rem; color: #AAA; font-size: 0.8rem; font-weight: 400; }
+
+@media (max-width: 600px) {
+    h1 { font-size: 1.8rem; }
+    .image-container img { width: 180px; height: 180px; }
+    .metric p { font-size: 1.6rem; }
+}
